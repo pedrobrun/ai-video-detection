@@ -2,6 +2,9 @@ from PIL import Image
 from flask import Flask, request, jsonify
 from smart_open import open
 from services.onnx import ONNX
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 

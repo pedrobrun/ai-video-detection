@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/app
     environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/mydatabase
+      - DATABASE_URL=postgresql://user:password@db:5433/overview-ai
     depends_on:
       - db
 
@@ -21,6 +21,9 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: overview-ai
+    ports:
+      - "5433:5432"
+
 
 volumes:
   postgres_data:
