@@ -1,7 +1,7 @@
 venv/
 
-# Model files are too large for git
-models/
+# ONNX's Model files are too large for git
+onnx/
 
 .env
 

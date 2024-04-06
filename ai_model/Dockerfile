@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 
 # Set the working directory inside the container
 WORKDIR /app
+ENV PYTHONPATH /app
 
 # Copy the requirements file to the working directory
 COPY requirements.txt .
