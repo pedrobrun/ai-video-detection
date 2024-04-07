@@ -1,39 +1,25 @@
-from PIL import Image
-from flask import Flask, request, jsonify
-from smart_open import open
-from services.onnx import ONNX
+from flask import Flask
+from database.connection import db
 from dotenv import load_dotenv
+import os
+from flask_migrate import Migrate
 
 load_dotenv()
 
-app = Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
-model = ONNX("yolov8s")
+    db.init_app(app)
 
-@app.route('/detect', methods=['POST'])
-def detect():
-    image_path = request.json['image_path']
-    confidence = request.json['confidence']
-    iou = request.json['iou']
-    with open(image_path, 'rb') as f:
-        original_img = Image.open(f).convert('RGB')
-    predictions = model(original_img, confidence, iou)
-    detections = [p.to_dict() for p in predictions]
+    migrate = Migrate(app, db)
 
-    return jsonify(detections)
+    with app.app_context():
+        from routes import main
+        app.register_blueprint(main)
 
-@app.route('/health_check', methods=['GET'])
-def health_check():
-    if model is None:
-        return "Model is not loaded"
-    return f"Model {model.model_name} is loaded"
-
-@app.route('/load_model', methods=['POST'])
-def load_model():
-    model_name = request.json['model_name']
-    global model
-    model = ONNX(model_name)
-    return f"Model {model_name} is loaded"
+    return app
 
 if __name__ == "__main__":
+    app = create_app()
     app.run(host='0.0.0.0')

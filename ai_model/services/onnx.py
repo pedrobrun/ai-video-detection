@@ -7,7 +7,7 @@ import numpy as np
 from models.bbox import BBOX
 from models.prediction import Prediction
 
-class ONNX:
+class OnnxService:
     def __init__(self, model_name: str):
         self.model_name = model_name
         providers = ort.get_available_providers()
@@ -84,6 +84,3 @@ class ONNX:
         outputs = self.model.run(None, {self.input_name: img_input})
         predictions = self.postprocess(outputs, confidence_thresh, iou_thresh, img.width, img.height)
         return predictions
-
-
-model = ONNX("yolov8s")

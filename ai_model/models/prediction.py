@@ -1,20 +1,14 @@
-from dataclasses import dataclass
-from .bbox import BBOX
+from database.connection import db
 
-@dataclass
-class Prediction:
-    class_name: int
-    confidence: float
-    box: BBOX
-    
+class Prediction(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    class_name = db.Column(db.String(255), nullable=False)
+    confidence = db.Column(db.Float, nullable=False)
+
     def to_dict(self):
         return {
-            "class_name": str(self.class_name),
-            "confidence": float(self.confidence),
-            "box": {
-                "left": int(self.box.left),
-                "top": int(self.box.top),
-                "width": int(self.box.width),
-                "height": int(self.box.height)
-            }
+            "class_name": self.class_name,
+            "confidence": self.confidence,
+            # Adjusted to dynamically include related BBOXes if needed
+            "boxes": [box.to_dict() for box in self.boxes]
         }

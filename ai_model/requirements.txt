@@ -8,3 +8,4 @@ Pillow==9.3.0
 Requests==2.31.0
 python-dotenv==1.0.1
 psycopg2-binary==2.9.9
+Flask-Migrate==4.0.7
