@@ -37,6 +37,27 @@ def load_model():
     app.model = OnnxService(model_name)
     return f"Model {model_name} is loaded"
 
+@main.route('/videos', methods=['GET'])
+def get_videos():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    paginated_videos = Video.query.paginate(page=page, per_page=per_page, error_out=False)
+    videos_data = []
+
+    for video in paginated_videos.items:
+        videos_data.append({
+            'id': video.id,
+            'name': video.name,
+            'created_at': video.created_at.isoformat(),
+        })
+    
+    return jsonify({
+        'videos': videos_data,
+        'total': paginated_videos.total,
+        'pages': paginated_videos.pages,
+        'current_page': paginated_videos.page
+    }), 200
+
 @main.route('/upload_video', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:
