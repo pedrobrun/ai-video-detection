@@ -1,4 +1,5 @@
 from flask import Flask
+from services.onnx import OnnxService
 from database.connection import db
 from dotenv import load_dotenv
 import os
@@ -15,13 +16,12 @@ def create_app():
 
     migrate = Migrate(app, db)
 
+    model = OnnxService("yolov8s")
+
     executor = Executor(app)
 
-    def process_detection(detection_id):
-        app.logger.info(f"Processing detection for ID 1: {detection_id}")
-        pass
 
-    app.process_detection = process_detection
+    app.model = model
     app.executor = executor
 
     with app.app_context():

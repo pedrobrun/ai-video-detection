@@ -1,9 +1,13 @@
-from database.connection import db
+from dataclasses import dataclass, field
+from typing import List
+from .bbox import BBOX
 
-class Prediction(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    class_name = db.Column(db.String(255), nullable=False)
-    confidence = db.Column(db.Float, nullable=False)
+@dataclass
+class Prediction:
+    class_name: str
+    confidence: float
+    detection_id: int
+    boxes: List[BBOX] = field(default_factory=list)
 
     def to_dict(self):
         return {

@@ -4,7 +4,6 @@ from PIL import Image
 import cv2
 import numpy as np
 
-from models.bbox import BBOX
 from models.prediction import Prediction
 
 class OnnxService:
@@ -60,19 +59,29 @@ class OnnxService:
                 scores.append(max_score)
                 boxes.append([left, top, width, height])
         indices = cv2.dnn.NMSBoxes(boxes, scores, confidence_thresh, iou_thresh)
-        detections = []
+        predictions_data = []
         if len(indices) > 0:
             for i in indices.flatten():
                 left, top, width, height = boxes[i]
                 class_id = class_ids[i]
                 score = scores[i]
-                detection = Prediction(
-                    class_name=self.idx2class[class_id],
-                    confidence=score,
-                    box=BBOX(left, top, width, height)
-                )
-                detections.append(detection)
-        return detections
+
+                bbox_data = {
+                    "left": left,
+                    "top": top,
+                    "width": width,
+                    "height": height
+                }
+
+                prediction_data = {
+                    "class_name": self.idx2class[class_id],
+                    "confidence": score,
+                    "box": bbox_data
+                }
+
+                predictions_data.append(prediction_data)
+
+        return predictions_data
 
     def __call__(
         self, 

@@ -1,14 +1,11 @@
-from database.connection import db
+from dataclasses import dataclass
 
-class BBOX(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    left = db.Column(db.Integer, nullable=False)
-    top = db.Column(db.Integer, nullable=False)
-    width = db.Column(db.Integer, nullable=False)
-    height = db.Column(db.Integer, nullable=False)
-    prediction_id = db.Column(db.Integer, db.ForeignKey('prediction.id'))
-
-    prediction = db.relationship('Prediction', backref=db.backref('boxes', lazy=True))
+@dataclass
+class BBOX:
+    left: int
+    top: int
+    width: int
+    height: int
 
     def to_dict(self):
         return {

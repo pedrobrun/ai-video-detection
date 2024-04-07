@@ -2,10 +2,10 @@ from flask import Blueprint, current_app as app, request, jsonify
 from models.detection import Detection
 from services.onnx import OnnxService
 from database.connection import db
+from services.detection import process_detection
+from PIL import Image
 
 main = Blueprint('main', __name__)
-
-model = OnnxService("yolov8s")
 
 @main.route('/detect', methods=['POST'])
 def detect():
@@ -20,19 +20,18 @@ def detect():
     db.session.add(detection)
     db.session.commit()
 
-    app.executor.submit(app.process_detection, detection.id)
+    app.executor.submit(process_detection, detection.id)
 
     return jsonify({"message": "Your detection request is being processed", "id": detection.id})
 
 @main.route('/health_check', methods=['GET'])
 def health_check():
-    if model is None:
+    if app.model is None:
         return "Model is not loaded"
-    return f"Model {model.model_name} is loaded"
+    return f"Model {app.model.model_name} is loaded"
 
 @main.route('/load_model', methods=['POST'])
 def load_model():
     model_name = request.json['model_name']
-    global model
-    model = OnnxService(model_name)
+    app.model = OnnxService(model_name)
     return f"Model {model_name} is loaded"
