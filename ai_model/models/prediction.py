@@ -9,6 +9,5 @@ class Prediction(db.Model):
         return {
             "class_name": self.class_name,
             "confidence": self.confidence,
-            # Adjusted to dynamically include related BBOXes if needed
             "boxes": [box.to_dict() for box in self.boxes]
         }
