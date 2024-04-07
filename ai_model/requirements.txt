@@ -10,3 +10,4 @@ python-dotenv==1.0.1
 psycopg2-binary==2.9.9
 Flask-Migrate==4.0.7
 Flask-Executor==1.0.0
+flask-cors==3.0.10
