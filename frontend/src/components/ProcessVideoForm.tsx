@@ -35,7 +35,6 @@ export function ProcessVideoForm() {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("hello")
     if (!selectedVideo) {
       alert('Please select a video.');
       return;
@@ -60,7 +59,7 @@ export function ProcessVideoForm() {
                 <Input type="number" placeholder="shadcn" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                {/** TODO: add something here */}
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -76,7 +75,7 @@ export function ProcessVideoForm() {
                 <Input type="number" placeholder="shadcn" {...field} />
               </FormControl>
               <FormDescription>
-                This is your public display name.
+                {/** TODO: add something here */}
               </FormDescription>
               <FormMessage />
             </FormItem>

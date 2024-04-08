@@ -33,7 +33,7 @@ export function VideoList({
   return (
     <div>
       <h2 className='text-sm text-center pt-2'>Select a video</h2>
-      <div className="w-[250px] flex flex-col gap-2 p-2 bg-lightPurple bg-opacity-20 ">
+      <div className="w-[250px] border border-solid border-darkPurple p-1 flex flex-col gap-2 p-2 bg-lightPurple bg-opacity-20 max-h-[300px] overflow-y-scroll">
         {data &&
           data.videos &&
           data.videos.length > 0 &&
