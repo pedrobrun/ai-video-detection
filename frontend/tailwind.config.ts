@@ -19,13 +19,16 @@ const config = {
     },
     extend: {
       colors: {
+        lightPurple: "#A09EFB",
+        midPurple: "#6C5CFB",
+        darkPurple: "#4C32DE",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        ring: "#6C5CFB",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#4C32DE",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {

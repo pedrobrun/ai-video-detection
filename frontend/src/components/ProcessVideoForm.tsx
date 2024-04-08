@@ -14,49 +14,42 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { VideoList } from "./VideoList"
+import { Video } from "@/types"
+import { useState } from "react"
 
 const formSchema = z.object({
-  video_id: z.string(),
   confidence: z.coerce.number().min(0).max(1),
   iou: z.coerce.number().min(0).max(1),
 })
 
 export function ProcessVideoForm() {
+  const [selectedVideo, setSelectedVideo] = useState<undefined | Video>()
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      video_id: "",
       confidence: 0,
       iou: 0,
     },
   })
 
-  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+    console.log("hello")
+    if (!selectedVideo) {
+      alert('Please select a video.');
+      return;
+    }
+    
+    const dataToSend = { ...values, selectedVideoId: selectedVideo.id };
+    console.log(dataToSend);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[250px]">
-        <FormField
-          control={form.control}
-          name="video_id"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Video</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <VideoList selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} />
+
         <FormField
           control={form.control}
           name="iou"
