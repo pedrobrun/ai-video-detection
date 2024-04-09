@@ -1,10 +1,9 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FileUploader } from 'react-drag-drop-files'
 import { Button } from './ui/button'
 import { api } from '@/api'
-import { useRouter } from 'next/navigation'
 import { Spinner } from './Spinner'
 
 const fileTypes = ['mp4', 'avi', 'mov']
@@ -12,6 +11,16 @@ const fileTypes = ['mp4', 'avi', 'mov']
 export function VideoUploader() {
   const [file, setFile] = useState<File | null>(null)
   const [isUploadingVideo, setIsUploadingVideo] = useState(false)
+  const [isLoadingUploadComponent, setIsLoadingUploadComponent] = useState(true)
+
+  /** Forcing a 0.5s loading time to prevent react-drag-drop-files UI flickering */
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoadingUploadComponent(false)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleChange = (file: File) => {
     setFile(file)
@@ -44,33 +53,39 @@ export function VideoUploader() {
   return (
     <div className="flex flex-col gap-4 items-center justify-center w-full h-full">
       <div className="cursor-pointer w-[250px] h-[50px] flex-row rounded-sm border-2 border-midPurple bg-lightPurple bg-opacity-20 flex justify-center items-center focus:outline-none">
-        <FileUploader
-          multiple={false}
-          name="file"
-          types={fileTypes}
-          hoverTitle=" "
-          disabled={isUploadingVideo}
-          handleChange={handleChange}
-        >
-          <div className="w-full h-full flex flex-col items-center justify-center">
-            {
-              isUploadingVideo ?
-              <Spinner /> :
-              <div className="text-center cursor-pointer w-full flex-col p-4 flex justify-center items-center">
-                {file ? (
-                  <p className="text-sm">File loaded successfully!</p>
-                ) : (
-                  <>
-                    <p className="text-sm">Upload or drop a video here</p>
-                    <p className="text-xs">mp4, avi, mov</p>
-                  </>
-                )}
-              </div>
-            }
-          </div>
-        </FileUploader>
+        {isLoadingUploadComponent ? (
+          <Spinner />
+        ) : (
+          <FileUploader
+            multiple={false}
+            name="file"
+            types={fileTypes}
+            hoverTitle=" "
+            disabled={isUploadingVideo}
+            handleChange={handleChange}
+          >
+            <div className="w-full h-full flex flex-col items-center justify-center">
+              {isUploadingVideo ? (
+                <Spinner />
+              ) : (
+                <div className="text-center cursor-pointer w-full flex-col p-4 flex justify-center items-center">
+                  {file ? (
+                    <p className="text-sm">File loaded successfully!</p>
+                  ) : (
+                    <>
+                      <p className="text-sm">Upload or drop a video here</p>
+                      <p className="text-xs">mp4, avi, mov</p>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          </FileUploader>
+        )}
       </div>
-      <Button disabled={isUploadingVideo} onClick={uploadVideo}>Upload Video</Button>
+      <Button disabled={isUploadingVideo} onClick={uploadVideo}>
+        Upload Video
+      </Button>
       {file && (
         <div
           onClick={() => setFile(null)}

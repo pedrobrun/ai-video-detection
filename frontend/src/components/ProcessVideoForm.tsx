@@ -81,7 +81,7 @@ export function ProcessVideoForm() {
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button className="flex items-center justify-center w-full" type="submit">Process Video</Button>
       </form>
     </Form>
   )
