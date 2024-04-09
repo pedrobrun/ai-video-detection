@@ -109,13 +109,13 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
             
             frame_count += 1
 
-            detection.status = DetectionStatus.SUCCESS
         cap.release()
     except Exception as e:
         app.logger.error(f"Error processing video {video_id}: {e}")
         detection.status = DetectionStatus.FAILED
     finally:
         os.unlink(tmp_file_path)
+        detection.status = DetectionStatus.SUCCESS
         # if predictions:
             # db.session.bulk_save_objects(predictions)
         db.session.commit()
