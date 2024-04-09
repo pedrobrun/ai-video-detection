@@ -111,6 +111,13 @@ def get_detections():
         'current_page': paginated_detections.page
     }), 200
 
+@main.route('/detections/<int:detection_id>', methods=['GET'])
+def get_detection(detection_id):
+    detection = Detection.query.get(detection_id)
+    if not detection:
+        return jsonify({'error': 'Detection not found'}), 404
+    return jsonify(detection.to_json())
+
 @main.route('/upload_video', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:

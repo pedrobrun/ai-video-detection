@@ -1,13 +1,30 @@
 from enums.detection import DetectionStatus
 from database.connection import db
+import base64
 
 class Detection(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # image_path = db.Column(db.String(), nullable=False)
     confidence = db.Column(db.Float, nullable=False)
     iou = db.Column(db.Float, nullable=False)
     status = db.Column(db.Enum(DetectionStatus), default=DetectionStatus.PROCESSING, nullable=False)
-    # results = db.Column(db.JSON, nullable=True)
     model_name = db.Column(db.String(255), nullable=False)
     video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
     video = db.relationship('Video', backref=db.backref('detection_configs', lazy=True))
+
+    def to_json(self):
+        video = {
+            'id': self.video.id,
+            'name': self.video.name,
+            'created_at': self.video.created_at.isoformat(),
+            'updated_at': self.video.updated_at.isoformat(),
+            'video_data': base64.b64encode(self.video.video_data).decode('utf-8') if self.video.video_data else None
+        }
+        return {
+            'id': self.id,
+            'confidence': self.confidence,
+            'iou': self.iou,
+            'status': self.status.name if self.status else None,
+            'model_name': self.model_name,
+            'video_id': self.video_id,
+            'video': video
+        }
