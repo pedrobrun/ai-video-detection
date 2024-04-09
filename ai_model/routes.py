@@ -87,6 +87,30 @@ def get_videos():
         'current_page': paginated_videos.page
     }), 200
 
+@main.route('/detections', methods=['GET'])
+def get_detections():
+    page = request.args.get('page', 1, type=int)
+    per_page = request.args.get('per_page', 10, type=int)
+    paginated_detections = Detection.query.paginate(page=page, per_page=per_page, error_out=False)
+    detections_data = []
+
+    for detection in paginated_detections.items:
+        detections_data.append({
+            'id': detection.id,
+            'confidence': detection.confidence,
+            'iou': detection.iou,
+            'status': detection.status.name,
+            'model_name': detection.model_name,
+            'video_id': detection.video_id,
+        })
+    
+    return jsonify({
+        'detections': detections_data,
+        'total': paginated_detections.total,
+        'pages': paginated_detections.pages,
+        'current_page': paginated_detections.page
+    }), 200
+
 @main.route('/upload_video', methods=['POST'])
 def upload_video():
     if 'video' not in request.files:
