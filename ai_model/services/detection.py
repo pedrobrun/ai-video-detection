@@ -1,7 +1,12 @@
 from flask import current_app as app
+from enums.detection import DetectionStatus
+from models.prediction import Prediction
 from models.detection import Detection
 from PIL import Image
 from database.connection import db
+import cv2
+import tempfile
+import os
 
 def process_detection(detection_id):
     with app.app_context():
@@ -21,7 +26,10 @@ def process_detection(detection_id):
             return
 
         try:
+            app.logger.debug("THIS IS THE IMAGE: %s", original_img)
             predictions_data = app.model(original_img, detection.confidence, detection.iou)
+            app.logger.info('predictions_data: %s', predictions_data)
+
             serialized_predictions = []
 
             for prediction_data in predictions_data:
@@ -48,4 +56,66 @@ def process_detection(detection_id):
             detection.status = 'failed'
             db.session.commit()
 
+        db.session.commit()
+
+def process_video_blob(video_data, video_id, confidence, iou, model_name):
+    # predictions = []
+
+    detection = Detection.query.filter_by(video_id=video_id, confidence=confidence, iou=iou, model_name=model_name).first()
+    if not detection:
+        detection = Detection(video_id=video_id, confidence=confidence, iou=iou, model_name=model_name)
+        db.session.add(detection)
+        db.session.commit()
+    try:
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as tmp_file:
+            tmp_file.write(video_data)
+            tmp_file_path = tmp_file.name
+        
+        cap = cv2.VideoCapture(tmp_file_path)
+        
+        frame_count = 0
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
+            
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            frame_image = Image.fromarray(frame_rgb)
+            
+            app.logger.debug("THIS IS THE FRAME AS PIL IMAGE: %s", frame_image)
+            
+            result = app.model(frame_image, confidence, iou)
+            app.logger.info('Result: %s', result)
+
+            for res in result:
+                prediction = Prediction(
+                    detection_id=detection.id,
+                    class_name=res['class_name'],
+                    confidence=float(res['confidence']),
+                    box_left=res['box']['left'],
+                    box_top=res['box']['top'],
+                    box_width=res['box']['width'],
+                    box_height=res['box']['height']
+                )
+                try:
+                    db.session.add(prediction)
+                    db.session.commit()
+                except Exception as e:
+                    # Handle or log the exception
+                    app.logger.error(f"Failed to insert prediction: {e}")
+                    db.session.rollback()
+                
+                # predictions.append(prediction)
+            
+            frame_count += 1
+
+            detection.status = DetectionStatus.SUCCESS
+        cap.release()
+    except Exception as e:
+        app.logger.error(f"Error processing video {video_id}: {e}")
+        detection.status = DetectionStatus.FAILED
+    finally:
+        os.unlink(tmp_file_path)
+        # if predictions:
+            # db.session.bulk_save_objects(predictions)
         db.session.commit()

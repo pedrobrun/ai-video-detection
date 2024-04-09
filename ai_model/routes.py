@@ -1,29 +1,58 @@
 from flask import Blueprint, current_app as app, request, jsonify
+from enums.detection import DetectionStatus
 from models.detection import Detection
 from models.video import Video
 from services.onnx import OnnxService
 from database.connection import db
-from services.detection import process_detection
+from services.detection import process_detection, process_video_blob
 from werkzeug.utils import secure_filename
 
 main = Blueprint('main', __name__)
 
-@main.route('/detect', methods=['POST'])
-def detect():
-    data = request.json
-    detection = Detection(
-        image_path=data['image_path'],
-        confidence=data['confidence'],
-        iou=data['iou'],
-        status='processing'
-    )
+# @main.route('/detect', methods=['POST'])
+# def detect():
+#     data = request.json
+#     detection = Detection(
+#         image_path=data['image_path'],
+#         confidence=data['confidence'],
+#         iou=data['iou'],
+#         status='processing'
+#     )
 
-    db.session.add(detection)
-    db.session.commit()
+#     db.session.add(detection)
+#     db.session.commit()
 
-    app.executor.submit(process_detection, detection.id)
+#     app.executor.submit(process_detection, detection.id)
 
-    return jsonify({"message": "Your detection request is being processed", "id": detection.id})
+#     return jsonify({"message": "Your detection request is being processed", "id": detection.id})
+
+@main.route('/process_video/<int:video_id>', methods=['POST'])
+def process_video(video_id):
+    data = request.get_json()
+
+    confidence = data.get('confidence')
+    iou = data.get('iou')
+
+    if confidence is None:
+        return jsonify({'error': 'Confidence not provided'}), 400
+    if iou is None:
+        return jsonify({'error': 'IoU not provided'}), 400
+
+
+    video = Video.query.get(video_id)
+    if not video:
+        return jsonify({'error': 'Video not found'}), 404
+    
+    detection = Detection.query.filter_by(video_id=video_id, confidence=confidence, iou=iou, model_name=app.model.model_name).first()
+    
+    if detection and detection.status in [DetectionStatus.PROCESSING, DetectionStatus.SUCCESS]:
+        return jsonify({'message': 'Detection is already processing or has been processed successfully.'}), 200
+
+    try:
+        app.executor.submit(process_video_blob, video.video_data, video_id, confidence, iou, app.model.model_name)
+        return jsonify({'message': 'Video processing started'}), 202
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @main.route('/health_check', methods=['GET'])
 def health_check():

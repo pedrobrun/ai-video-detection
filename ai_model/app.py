@@ -21,6 +21,9 @@ def create_app():
 
     model = OnnxService("yolov8s")
 
+    app.config['EXECUTOR_TYPE'] = 'thread'
+    app.config['EXECUTOR_MAX_WORKERS'] = 4
+
     executor = Executor(app)
 
     app.model = model
