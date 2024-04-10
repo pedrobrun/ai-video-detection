@@ -5,6 +5,7 @@ import { FileUploader } from 'react-drag-drop-files'
 import { Button } from './ui/button'
 import { api } from '@/api'
 import { Spinner } from './Spinner'
+import { toast } from 'react-toastify'
 
 const fileTypes = ['mp4', 'avi', 'mov']
 
@@ -27,7 +28,7 @@ export function VideoUploader() {
   }
 
   const uploadVideo = async () => {
-    if (!file) return alert('No video loaded to upload.')
+    if (!file) return toast('No video loaded to upload.', { position: "top-center", theme: "dark" })
     try {
       setIsUploadingVideo(true)
       const form = new FormData()
@@ -39,7 +40,7 @@ export function VideoUploader() {
         },
       })
       if (response.status === 201 || response.status === 200) {
-        alert('Uploaded successfully')
+        toast('Uploaded successfully.', { position: "top-center", theme: "dark" })
         // force reload to re-fetch videos
         location.reload()
       }

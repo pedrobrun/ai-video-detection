@@ -18,6 +18,7 @@ import { VideoList } from './VideoList'
 import { Video } from '@/types'
 import { useState } from 'react'
 import { api } from '@/api'
+import { toast } from 'react-toastify'
 
 const formSchema = z.object({
   confidence: z.coerce.number().min(0.1).max(1),
@@ -38,7 +39,7 @@ export function ProcessVideoForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!selectedVideo) {
-      alert('Please select a video.')
+      toast('Please select a video', { position: "top-center", theme: "dark" })
       return
     }
 
@@ -50,7 +51,7 @@ export function ProcessVideoForm() {
         iou: values.iou,
       })
     } catch (e: any) {
-      alert(e.message)
+      toast(e.message || "Error", { position: "top-center", theme: "dark" })
     } finally {
       setIsLoadingRequest(false)
     }
