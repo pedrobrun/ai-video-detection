@@ -4,7 +4,7 @@ from PIL import Image
 import cv2
 import numpy as np
 
-from models.prediction import PredictionDataclass
+from schemas.prediction import Prediction
 
 class OnnxService:
     def __init__(self, model_name: str):
@@ -36,7 +36,7 @@ class OnnxService:
         iou_thresh: float,
         img_width: int,
         img_height: int
-    ) -> List[PredictionDataclass]:
+    ) -> List[Prediction]:
         
         outputs = np.transpose(np.squeeze(output[0]))
         rows = outputs.shape[0]
@@ -88,7 +88,7 @@ class OnnxService:
         img: Image.Image,
         confidence_thresh: float, 
         iou_thresh: float
-    ) -> List[PredictionDataclass]:
+    ) -> List[Prediction]:
         img_input = self.preprocess(img)
         outputs = self.model.run(None, {self.input_name: img_input})
         predictions = self.postprocess(outputs, confidence_thresh, iou_thresh, img.width, img.height)

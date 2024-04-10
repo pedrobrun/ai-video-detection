@@ -59,8 +59,6 @@ def process_detection(detection_id):
         db.session.commit()
 
 def process_video_blob(video_data, video_id, confidence, iou, model_name):
-    # predictions = []
-
     detection = Detection.query.filter_by(video_id=video_id, confidence=confidence, iou=iou, model_name=model_name).first()
     if not detection:
         detection = Detection(video_id=video_id, confidence=confidence, iou=iou, model_name=model_name)
@@ -106,12 +104,9 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
                     db.session.add(prediction)
                     db.session.commit()
                 except Exception as e:
-                    # Handle or log the exception
                     app.logger.error(f"Failed to insert prediction: {e}")
                     db.session.rollback()
                 
-                # predictions.append(prediction)
-            
             frame_count += 1
 
         cap.release()
@@ -121,6 +116,4 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
     finally:
         os.unlink(tmp_file_path)
         detection.status = DetectionStatus.SUCCESS
-        # if predictions:
-            # db.session.bulk_save_objects(predictions)
         db.session.commit()
