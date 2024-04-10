@@ -1,9 +1,9 @@
-"use client"
+'use client'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -12,19 +12,21 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { VideoList } from "./VideoList"
-import { Video } from "@/types"
-import { useState } from "react"
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { VideoList } from './VideoList'
+import { Video } from '@/types'
+import { useState } from 'react'
+import { api } from '@/api'
 
 const formSchema = z.object({
-  confidence: z.coerce.number().min(0).max(1),
-  iou: z.coerce.number().min(0).max(1),
+  confidence: z.coerce.number().min(0.1).max(1),
+  iou: z.coerce.number().min(0.1).max(1),
 })
 
 export function ProcessVideoForm() {
   const [selectedVideo, setSelectedVideo] = useState<undefined | Video>()
+  const [isLoadingRequest, setIsLoadingRequest] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,23 +36,40 @@ export function ProcessVideoForm() {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!selectedVideo) {
-      alert('Please select a video.');
-      return;
+      alert('Please select a video.')
+      return
     }
-    
-    const dataToSend = { ...values, selectedVideoId: selectedVideo.id };
-    console.log(dataToSend);
+
+    setIsLoadingRequest(true)
+
+    try {
+      await api.post(`/process_video/${selectedVideo.id}`, {
+        confidence: values.confidence,
+        iou: values.iou,
+      })
+    } catch (e: any) {
+      alert(e.message)
+    } finally {
+      setIsLoadingRequest(false)
+    }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[250px]">
-        <VideoList selectedVideo={selectedVideo} setSelectedVideo={setSelectedVideo} />
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 w-[250px]"
+      >
+        <VideoList
+          selectedVideo={selectedVideo}
+          setSelectedVideo={setSelectedVideo}
+        />
 
         <FormField
           control={form.control}
+          disabled={isLoadingRequest}
           name="iou"
           render={({ field }) => (
             <FormItem>
@@ -81,7 +100,13 @@ export function ProcessVideoForm() {
             </FormItem>
           )}
         />
-        <Button className="flex items-center justify-center w-full" type="submit">Process Video</Button>
+        <Button
+          disabled={isLoadingRequest}
+          className="flex items-center justify-center w-full"
+          type="submit"
+        >
+          Process Video
+        </Button>
       </form>
     </Form>
   )

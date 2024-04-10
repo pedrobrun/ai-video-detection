@@ -27,7 +27,7 @@ export function Detections({}: {}) {
 
   return (
     <div>
-      <div className="w-[300px] p-1 flex flex-col gap-4 bg-opacity-20 max-h-[300px] overflow-y-auto h-[300px]">
+      <div className="w-[300px] p-1 flex flex-col gap-4 bg-opacity-20 overflow-y-auto">
         {data &&
           data.detections &&
           data.detections.length > 0 &&

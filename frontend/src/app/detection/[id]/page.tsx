@@ -2,6 +2,7 @@
 
 import { api } from '@/api'
 import { Spinner } from '@/components/Spinner'
+import { VideoPlayerWithFabric } from '@/components/VideoPlayerWithFabric'
 import { Detection } from '@/types'
 import { Params } from 'next/dist/shared/lib/router/utils/route-matcher'
 import { useEffect, useState } from 'react'
@@ -79,14 +80,11 @@ export default function Detection({ params }: Params) {
               </div>
             </div>
           </div>
-          {videoUrl && (
-            <video
-              controls
-              src={videoUrl}
-              style={{ width: '100%', maxWidth: '500px' }}
-            >
-              Your browser does not support the video tag.
-            </video>
+          {videoUrl && data.predictions && data.predictions.length > 0 && (
+            <VideoPlayerWithFabric
+              predictions={data.predictions}
+              videoUrl={videoUrl}
+            />
           )}
         </>
       ) : (

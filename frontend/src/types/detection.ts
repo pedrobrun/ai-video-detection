@@ -1,4 +1,4 @@
-import { Video } from "."
+import { Prediction, Video } from "."
 
 export interface Detection {
   id: number
@@ -8,4 +8,5 @@ export interface Detection {
   status: string
   video_id: number
   video?: Video
+  predictions: Prediction[]
 }
