@@ -9,28 +9,6 @@ import Link from "next/link";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="flex gap-2 items-center">
-
-      </div>
-
-      {/* <div className="flex flex-col w-full items-center gap-10">
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-xs font-bold">VIDEO UPLOAD</p>
-          <VideoUploader />
-        </div>
-
-        <hr className="w-[250px]"></hr>
-
-        <div className="flex flex-col items-center gap-2">
-          <div className="text-xs font-bold">PROCESS VIDEO</div>
-          <ProcessVideoForm />
-        </div>
-
-        <div className="flex flex-col items-center gap-2">
-          <div className="text-xs font-bold">PROCESSINGS</div>
-          <Detections />
-        </div>
-      </div> */}
       <DisplaySelector />
     </main>
   );

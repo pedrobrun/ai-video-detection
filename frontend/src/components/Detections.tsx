@@ -3,12 +3,10 @@
 import { api } from '@/api'
 import { cn } from '@/lib/utils'
 import { Detection, Paginated } from '@/types'
+import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-export function Detections({
-
-}: {
-}) {
+export function Detections({}: {}) {
   const [data, setData] = useState<
     (Paginated & { detections: Detection[] }) | undefined
   >()
@@ -34,33 +32,48 @@ export function Detections({
           data.detections &&
           data.detections.length > 0 &&
           data.detections.map((detection) => (
-            <div
+            <Link
               key={detection.id}
+              target="_blank"
+              href={`detection/${detection.id}`}
               className={cn(
-                "flex transition hover:scale-[1.02] hover:cursor-pointer bg-white flex-col items-start justify-start p-2 rounded-[2px] border-2 border-darkPurple",
+                'flex transition hover:scale-[1.02] hover:cursor-pointer bg-white flex-col items-start justify-start p-2 rounded-[2px] border-2 border-darkPurple'
               )}
             >
               <div className="w-full flex items-start justify-between">
                 <div>
                   <p className="text-sm w-full">
-                    <span className='opacity-50'>ID</span>: <strong>{detection.id}</strong>
+                    <span className="opacity-50">ID</span>:{' '}
+                    <strong>{detection.id}</strong>
                   </p>
                   <p className="text-sm w-full">
-                    <span className='opacity-50'>IoU</span>: <strong>{detection.iou}</strong>
+                    <span className="opacity-50">IoU</span>:{' '}
+                    <strong>{detection.iou}</strong>
                   </p>
                   <p className="text-sm w-full">
-                    <span className='opacity-50'>Confidence</span>: <strong>{detection.confidence}</strong>
+                    <span className="opacity-50">Confidence</span>:{' '}
+                    <strong>{detection.confidence}</strong>
                   </p>
                   <p className="text-sm w-full">
-                    <span className='opacity-50'>Model</span>: <strong>{detection.model_name}</strong>
+                    <span className="opacity-50">Model</span>:{' '}
+                    <strong>{detection.model_name}</strong>
                   </p>
                   {/* <p className="text-sm truncate overflow-hidden w-full">
                     Status: {detection.detection}
                   </p> */}
                 </div>
-                <div className={cn('h-3 w-3 mt-1 rounded-full', detection.status === 'SUCCESS' ? 'bg-green-500' : detection.status === 'PROCESSING' ? 'bg-yellow-500' : 'bg-red-500')} />
+                <div
+                  className={cn(
+                    'h-3 w-3 mt-1 rounded-full',
+                    detection.status === 'SUCCESS'
+                      ? 'bg-green-500'
+                      : detection.status === 'PROCESSING'
+                      ? 'bg-yellow-500'
+                      : 'bg-red-500'
+                  )}
+                />
               </div>
-            </div>
+            </Link>
           ))}
       </div>
       {/* TODO: add pagination controls here */}

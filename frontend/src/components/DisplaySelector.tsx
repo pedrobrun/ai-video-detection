@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 const displays = {
   'UPLOAD': { component: <VideoUploader />, title: "VIDEO UPLOAD" },
   'PROCESS-FORM': { component: <ProcessVideoForm />, title: "PROCESS VIDEO" },
-  'DETECTIONS': { component: <Detections />, title: "PROCESSINGS" }
+  'DETECTIONS': { component: <Detections />, title: "DETECTIONS" }
 }
 
 export function DisplaySelector() {
@@ -19,7 +19,7 @@ export function DisplaySelector() {
       <div className="flex items-center gap-6">
         <div onClick={() => setSelectedDisplay("UPLOAD")} className={cn(selectedDisplay === 'UPLOAD' ? 'underline underline-offset-4 ' : '', "font-bold cursor-pointer")}>VIDEO UPLOAD</div>
         <div onClick={() => setSelectedDisplay("PROCESS-FORM")} className={cn(selectedDisplay === 'PROCESS-FORM' ? 'underline underline-offset-4' : '', "font-bold cursor-pointer")}>PROCESS VIDEO</div>
-        <div onClick={() => setSelectedDisplay("DETECTIONS")} className={cn(selectedDisplay === 'DETECTIONS' ? 'underline underline-offset-4' : '', "font-bold cursor-pointer")}>PROCESSINGS</div>
+        <div onClick={() => setSelectedDisplay("DETECTIONS")} className={cn(selectedDisplay === 'DETECTIONS' ? 'underline underline-offset-4' : '', "font-bold cursor-pointer")}>DETECTIONS</div>
       </div>
 
       {displays[selectedDisplay].component}
