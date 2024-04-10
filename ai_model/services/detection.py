@@ -72,6 +72,7 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
             tmp_file_path = tmp_file.name
         
         cap = cv2.VideoCapture(tmp_file_path)
+        fps = cap.get(cv2.CAP_PROP_FPS)
         
         frame_count = 0
         while cap.isOpened():
@@ -88,6 +89,8 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
             app.logger.info('Result: %s', result)
 
             for res in result:
+                timestamp = frame_count / fps
+
                 prediction = Prediction(
                     detection_id=detection.id,
                     class_name=res['class_name'],
@@ -95,7 +98,9 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
                     box_left=res['box']['left'],
                     box_top=res['box']['top'],
                     box_width=res['box']['width'],
-                    box_height=res['box']['height']
+                    box_height=res['box']['height'],
+                    frame_number=frame_count,
+                    timestamp=timestamp
                 )
                 try:
                     db.session.add(prediction)

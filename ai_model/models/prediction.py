@@ -27,6 +27,8 @@ class Prediction(db.Model):
     box_width = db.Column(db.Integer, nullable=False)
     box_height = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+    frame_number = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.Float, nullable=False)
 
     detection_id = db.Column(db.Integer, db.ForeignKey('detection.id'), nullable=False)
     detection = db.relationship('Detection', backref=db.backref('predictions', lazy=True))

@@ -1,4 +1,5 @@
 from flask import Blueprint, current_app as app, request, jsonify
+from models.prediction import Prediction
 from enums.detection import DetectionStatus
 from models.detection import Detection
 from models.video import Video
@@ -116,7 +117,26 @@ def get_detection(detection_id):
     detection = Detection.query.get(detection_id)
     if not detection:
         return jsonify({'error': 'Detection not found'}), 404
-    return jsonify(detection.to_json())
+    detection_data = detection.to_json()
+    
+    predictions = Prediction.query.filter_by(detection_id=detection.id).all()
+    prediction_data = [{
+        'id': prediction.id,
+        'class_name': prediction.class_name,
+        'confidence': float(prediction.confidence),
+        'box_left': prediction.box_left,
+        'box_top': prediction.box_top,
+        'box_width': prediction.box_width,
+        'box_height': prediction.box_height,
+        'created_at': prediction.created_at.isoformat(),
+        'frame_number': prediction.frame_number,
+        'timestamp': float(prediction.timestamp)
+    } for prediction in predictions]
+
+    detection_data['predictions'] = prediction_data
+
+    return jsonify(detection_data)
+
 
 @main.route('/upload_video', methods=['POST'])
 def upload_video():
