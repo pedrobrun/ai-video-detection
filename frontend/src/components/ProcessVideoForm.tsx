@@ -50,6 +50,7 @@ export function ProcessVideoForm() {
         confidence: values.confidence,
         iou: values.iou,
       })
+      toast("Video processing started")
     } catch (e: any) {
       toast(e.message || "Error", { position: "top-center", theme: "dark" })
     } finally {
