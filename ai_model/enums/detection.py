@@ -4,3 +4,4 @@ class DetectionStatus(enum.Enum):
     PROCESSING = 'processing'
     SUCCESS = 'success'
     FAILED = 'failed'
+    STOPPED = 'stopped'
