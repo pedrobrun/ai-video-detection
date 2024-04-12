@@ -80,7 +80,7 @@ export function ProcessVideoForm() {
             <FormItem>
               <FormLabel>IoU</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="shadcn" {...field} />
+                <Input type="number" placeholder="0" {...field} />
               </FormControl>
               <FormDescription>
                 {/** TODO: add something here */}
@@ -96,7 +96,7 @@ export function ProcessVideoForm() {
             <FormItem>
               <FormLabel>Confidence</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="shadcn" {...field} />
+                <Input type="number" placeholder="0" {...field} />
               </FormControl>
               <FormDescription>
                 {/** TODO: add something here */}
