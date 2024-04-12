@@ -2,14 +2,18 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     platform: linux/amd64
     ports:
       - "5001:5000"
     volumes:
-      - .:/app
+      - ./backend:/app
     environment:
       - DATABASE_URL=postgresql://user:password@db:5432/overview_ai
+    command: >
+      /bin/sh -c "flask db upgrade && python app.py"
     depends_on:
       - db
 
@@ -24,6 +28,18 @@ services:
     ports:
       - "5433:5432"
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: yarn dev
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://localhost:5001
+    depends_on:
+      - app
 
 volumes:
   postgres_data:

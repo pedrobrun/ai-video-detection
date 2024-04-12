@@ -103,7 +103,7 @@ export const VideoPlayerWithFabric = ({
   }, []);
 
   return (
-      <div className="relative flex items-center justify-center h-full">
+      <div className="relative flex items-center justify-center h-full mt-10">
         <video
           ref={videoRef}
           src={videoUrl}
