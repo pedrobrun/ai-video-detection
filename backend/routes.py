@@ -75,7 +75,10 @@ def get_videos():
 def get_detections():
     page = request.args.get('page', 1, type=int)
     per_page = request.args.get('per_page', 10, type=int)
-    paginated_detections = Detection.query.paginate(page=page, per_page=per_page, error_out=False)
+    paginated_detections = Detection.query.order_by(
+        Detection.created_at.desc()
+    ).paginate(page=page, per_page=per_page, error_out=False)
+    
     detections_data = []
 
     for detection in paginated_detections.items:
