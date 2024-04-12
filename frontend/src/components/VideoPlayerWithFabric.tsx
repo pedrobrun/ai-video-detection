@@ -45,7 +45,7 @@ export const VideoPlayerWithFabric = ({
       const currentTime = videoRef.current.currentTime;
       const relevantPredictions = predictions.filter(
         /** it's never 0 here, so we try to be as precise as possible */
-        prediction => Math.abs(prediction.timestamp - currentTime) < 0.025
+        prediction => Math.abs(prediction.timestamp - currentTime) < 0.1
       );
 
       fabricCanvas.clear();
