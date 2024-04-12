@@ -46,11 +46,14 @@ export function ProcessVideoForm() {
     setIsLoadingRequest(true)
 
     try {
-      await api.post(`/process_video/${selectedVideo.id}`, {
+      const res = await api.post(`/process_video/${selectedVideo.id}`, {
         confidence: values.confidence,
         iou: values.iou,
       })
-      toast("Video processing started", { position: "top-center", theme: "dark" })
+      if (res.data.message === 'Detection is already processing or has been processed successfully.') {
+        return toast("A detection with this config for this video already exists. Check the detections section.", { position: "top-center", theme: "dark" })
+      } 
+      return toast("Video processing started", { position: "top-center", theme: "dark" })
     } catch (e: any) {
       toast(e.message || "Error", { position: "top-center", theme: "dark" })
     } finally {

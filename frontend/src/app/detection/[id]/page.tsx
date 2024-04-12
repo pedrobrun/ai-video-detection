@@ -46,56 +46,59 @@ export default function Detection({ params }: Params) {
   }
 
   return (
-    <div className="flex flex-col items-center mt-20 w-full justify-center">
-      <div>
-        <span className="opacity-50">ID:</span> {id}
-      </div>
-      {isLoadingVideo ? (
-        <div className="mt-12">
-          <Spinner />
+    <>
+      <div className='h-screen w-screen z-20 fixed top-0 bg-white via-white bg-gradient-to-b from-transparent to-lightPurple' />
+      <div className="flex absolute flex-col items-center mt-20 w-full h-full justify-center z-40">
+        <div>
+          <span className="opacity-50">ID:</span> {id}
         </div>
-      ) : data && data.video ? (
-        <>
-          <div className="text-start max-w-[500px]">
-            <div>
-              <span className="opacity-50">Model:</span>{' '}
-              <strong>{data.model_name}</strong>
-            </div>
-            <div>
-              <span className="opacity-50">IoU:</span>{' '}
-              <strong>{data.iou}</strong>
-            </div>
-            <div>
-              <span className="opacity-50">Confidence:</span>{' '}
-              <strong>{data.confidence}</strong>
-            </div>
-            <div>
-              <span className="opacity-50">Status:</span>{' '}
-              <strong>{data.status}</strong>
-            </div>
-            <div className="w-full overflow-hidden">
+        {isLoadingVideo ? (
+          <div className="mt-12">
+            <Spinner />
+          </div>
+        ) : data && data.video ? (
+          <>
+            <div className="text-start max-w-[500px]">
               <div>
-                <span className="opacity-50">Video Name:</span>{' '}
-                <strong>{data.video.name}</strong>
+                <span className="opacity-50">Model:</span>{' '}
+                <strong>{data.model_name}</strong>
+              </div>
+              <div>
+                <span className="opacity-50">IoU:</span>{' '}
+                <strong>{data.iou}</strong>
+              </div>
+              <div>
+                <span className="opacity-50">Confidence:</span>{' '}
+                <strong>{data.confidence}</strong>
+              </div>
+              <div>
+                <span className="opacity-50">Status:</span>{' '}
+                <strong>{data.status}</strong>
+              </div>
+              <div className="w-full overflow-hidden">
+                <div>
+                  <span className="opacity-50">Video Name:</span>{' '}
+                  <strong>{data.video.name}</strong>
+                </div>
               </div>
             </div>
-          </div>
-          {videoUrl && (!data.predictions || data.predictions.length === 0) && (
-            <div className="flex flex-col mt-10 items-center justify-center w-full h-full">
-              <div>No predictions have been computed yet.</div>
-              <video src={videoUrl} controls />
-            </div>
-          )}
-          {videoUrl && data.predictions && data.predictions.length > 0 && (
-            <VideoPlayerWithFabric
-              predictions={data.predictions}
-              videoUrl={videoUrl}
-            />
-          )}
-        </>
-      ) : (
-        <div>Detection not found with id {id}</div>
-      )}
-    </div>
+            {videoUrl && (!data.predictions || data.predictions.length === 0) && (
+              <div className="flex flex-col mt-10 items-center w-full h-full">
+                <div>No predictions have been computed yet.</div>
+                <video className='border-darkPurple border-4' src={videoUrl} controls />
+              </div>
+            )}
+            {videoUrl && data.predictions && data.predictions.length > 0 && (
+              <VideoPlayerWithFabric
+                predictions={data.predictions}
+                videoUrl={videoUrl}
+              />
+            )}
+          </>
+        ) : (
+          <div>Detection not found with id {id}</div>
+        )}
+      </div>
+    </>
   )
 }

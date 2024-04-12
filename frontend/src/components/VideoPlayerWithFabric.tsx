@@ -103,18 +103,17 @@ export const VideoPlayerWithFabric = ({
   }, []);
 
   return (
-      <div className="relative flex items-center justify-center w-full h-full">
+      <div className="relative flex items-center justify-center h-full">
         <video
           ref={videoRef}
           src={videoUrl}
           controls
-          className="absolute left-0 top-0 z-10 min-w-max min-h-max"
+          className="absolute -translate-x-[50%] left-0 right-0 top-0 z-10 min-w-max min-h-max border-darkPurple border-4"
         />
         <div className='absolute left-0 top-0'>
           <canvas
             ref={canvasRef}
-            className=" z-20"
-            style={{ pointerEvents: 'none' }}
+            className="pointer-events-none z-20 -translate-x-[50%]"
           />
         </div>
       </div>

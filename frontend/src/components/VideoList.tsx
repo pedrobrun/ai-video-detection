@@ -71,20 +71,18 @@ export function VideoList({
                   {video.id} - {video.name}
                 </p>
                 <div className="text-xs opacity-60">
-                  {video.created_at.split('T')[0].replaceAll('-', '/')}
+                  {(new Date(video.created_at)).toLocaleString()}
                 </div>
               </div>
             </div>
           ))
         )}
       </div>
-      {data && data.videos && data.videos.length > 0 && (
-        <div className="flex justify-center w-full">
-          <Button disabled={isLoading} onClick={fetchVideos} className="mt-2">
-            Refresh
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-center w-full">
+        <Button disabled={isLoading} onClick={fetchVideos} className="mt-2">
+          Refresh
+        </Button>
+      </div>
       {/* TODO: add pagination controls here */}
     </div>
   )
