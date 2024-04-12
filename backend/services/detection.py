@@ -21,7 +21,7 @@ def process_detection(detection_id):
                 original_img = Image.open(f).convert('RGB')
         except Exception as e:
             app.logger.error(f"Error loading image {image_path}: {e}")
-            detection.status = 'failed'
+            detection.status = DetectionStatus.FAILED
             db.session.commit()
             return
 
@@ -45,13 +45,13 @@ def process_detection(detection_id):
                 })
 
             detection.results = serialized_predictions
-            detection.status = 'completed'
+            detection.status = DetectionStatus.SUCCESS
             db.session.commit()
             app.logger.info(f"Detection {detection_id} processed successfully.")
 
         except Exception as e:
             app.logger.error(f"Error processing detection {detection_id}: {e}")
-            detection.status = 'failed'
+            detection.status = DetectionStatus.FAILED
             db.session.commit()
 
         db.session.commit()
