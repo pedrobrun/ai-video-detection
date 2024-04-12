@@ -4,7 +4,6 @@ from services.jobs import update_processing_detections
 from services.onnx import OnnxService
 from database.connection import db
 from dotenv import load_dotenv
-import os
 from flask_migrate import Migrate
 from flask_executor import Executor
 from flask_cors import CORS
@@ -35,7 +34,13 @@ def setup_scheduler(app):
         with app.app_context():
             update_processing_detections()
 
-    scheduler.add_job(id='Update Idle Processing Detections', func=job_wrapper, trigger='interval', minutes=1)
+    scheduler.add_job(
+        id='Update Idle Processing Detections',
+        func=job_wrapper,
+        trigger='interval',
+        minutes=5,
+        next_run_time=None
+    )
     scheduler.start()
 
 def setup_executor(app):

@@ -81,6 +81,8 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
             
             result = app.model(frame_image, confidence, iou)
 
+            app.logger.info('Detection result for frame %s on detection %s: %s', frame_count, detection.id, result)
+
             for res in result:
                 timestamp = frame_count / fps
 

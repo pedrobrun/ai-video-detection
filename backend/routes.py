@@ -86,6 +86,7 @@ def get_detections():
             'status': detection.status.name,
             'model_name': detection.model_name,
             'video_id': detection.video_id,
+            'created_at': detection.created_at.isoformat(),
         })
     
     return jsonify({

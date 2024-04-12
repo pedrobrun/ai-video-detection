@@ -7,6 +7,8 @@ from models.prediction import Prediction
 from models.detection import Detection
 
 def update_processing_detections():
+    app.logger.info("Running update_processing_detections job...")
+
     stale_threshold = datetime.now() - timedelta(minutes=60)
     
     # Construct a query to find all detections that are still marked as PROCESSING

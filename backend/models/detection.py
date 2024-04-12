@@ -1,3 +1,4 @@
+from datetime import datetime
 from enums.detection import DetectionStatus
 from database.connection import db
 import base64
@@ -12,6 +13,8 @@ class Detection(db.Model):
     model_name = db.Column(db.String(255), nullable=False)
     video_id = db.Column(UUID(as_uuid=True), db.ForeignKey('video.id'), nullable=False)
     video = db.relationship('Video', backref=db.backref('detection_configs', lazy=True))
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    updated_at = db.Column(db.DateTime, nullable=False, default=datetime.now(), onupdate=datetime.now())
 
     def to_json(self):
         video = {
