@@ -26,9 +26,7 @@ def process_detection(detection_id):
             return
 
         try:
-            app.logger.debug("THIS IS THE IMAGE: %s", original_img)
             predictions_data = app.model(original_img, detection.confidence, detection.iou)
-            app.logger.info('predictions_data: %s', predictions_data)
 
             serialized_predictions = []
 
@@ -81,10 +79,7 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             frame_image = Image.fromarray(frame_rgb)
             
-            app.logger.debug("THIS IS THE FRAME AS PIL IMAGE: %s", frame_image)
-            
             result = app.model(frame_image, confidence, iou)
-            app.logger.info('Result: %s', result)
 
             for res in result:
                 timestamp = frame_count / fps
@@ -101,6 +96,11 @@ def process_video_blob(video_data, video_id, confidence, iou, model_name):
                     timestamp=timestamp
                 )
                 try:
+                    # For edge cases when in-between processings took more than
+                    # the idle threshold and the detection was updated to IDLE,
+                    # but might still be processing
+                    detection.status = DetectionStatus.PROCESSING
+
                     db.session.add(prediction)
                     db.session.commit()
                 except Exception as e:
