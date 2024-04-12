@@ -1,8 +1,5 @@
 venv/
 
-# ONNX's Model files are too large for git
-onnx/
-
 .env
 
 .DS_Store
