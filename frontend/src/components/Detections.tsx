@@ -99,6 +99,9 @@ export function Detections({ }: {}) {
                     <span className="opacity-50">Status</span>:{' '}
                     <strong>{detection.status}</strong>
                   </p>
+                  <p className="text-sm truncate overflow-hidden w-full">
+                    <span className="opacity-50">{(new Date(detection.created_at)).toLocaleString()}</span>
+                  </p>
                 </div>
                 <div
                   className={cn(

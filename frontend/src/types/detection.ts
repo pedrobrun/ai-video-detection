@@ -8,6 +8,7 @@ export interface Detection {
   status: DetectionStatus
   video_id: number
   video?: Video
+  created_at: string;
   predictions: Prediction[]
 }
 
