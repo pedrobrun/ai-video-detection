@@ -80,6 +80,12 @@ export default function Detection({ params }: Params) {
               </div>
             </div>
           </div>
+          {videoUrl && (!data.predictions || data.predictions.length === 0) && (
+            <div className="flex flex-col mt-10 items-center justify-center w-full h-full">
+              <div>No predictions have been computed yet.</div>
+              <video src={videoUrl} controls />
+            </div>
+          )}
           {videoUrl && data.predictions && data.predictions.length > 0 && (
             <VideoPlayerWithFabric
               predictions={data.predictions}

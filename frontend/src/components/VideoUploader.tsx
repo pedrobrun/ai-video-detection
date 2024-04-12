@@ -41,8 +41,6 @@ export function VideoUploader() {
       })
       if (response.status === 201 || response.status === 200) {
         toast('Uploaded successfully.', { position: "top-center", theme: "dark" })
-        // force reload to re-fetch videos
-        location.reload()
       }
     } catch (error) {
       console.error('Error uploading video:', error)
