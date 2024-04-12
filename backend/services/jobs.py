@@ -11,8 +11,6 @@ def update_processing_detections():
 
     stale_threshold = datetime.now() - timedelta(minutes=60)
     
-    # Construct a query to find all detections that are still marked as PROCESSING
-    # but haven't received a new prediction in the last X minutes
     query = Detection.query.join(
         Prediction, isouter=True
     ).filter(
