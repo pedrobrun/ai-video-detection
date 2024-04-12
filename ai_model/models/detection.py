@@ -1,14 +1,16 @@
 from enums.detection import DetectionStatus
 from database.connection import db
 import base64
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
 class Detection(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     confidence = db.Column(db.Float, nullable=False)
     iou = db.Column(db.Float, nullable=False)
     status = db.Column(db.Enum(DetectionStatus), default=DetectionStatus.PROCESSING, nullable=False)
     model_name = db.Column(db.String(255), nullable=False)
-    video_id = db.Column(db.Integer, db.ForeignKey('video.id'), nullable=False)
+    video_id = db.Column(UUID(as_uuid=True), db.ForeignKey('video.id'), nullable=False)
     video = db.relationship('Video', backref=db.backref('detection_configs', lazy=True))
 
     def to_json(self):

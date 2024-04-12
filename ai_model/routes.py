@@ -10,7 +10,7 @@ from werkzeug.utils import secure_filename
 
 main = Blueprint('main', __name__)
 
-@main.route('/process_video/<int:video_id>', methods=['POST'])
+@main.route('/process_video/<string:video_id>', methods=['POST'])
 def process_video(video_id):
     data = request.get_json()
 
@@ -95,7 +95,7 @@ def get_detections():
         'current_page': paginated_detections.page
     }), 200
 
-@main.route('/detections/<int:detection_id>', methods=['GET'])
+@main.route('/detections/<string:detection_id>', methods=['GET'])
 def get_detection(detection_id):
     detection = Detection.query.get(detection_id)
     if not detection:
