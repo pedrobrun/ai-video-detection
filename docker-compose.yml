@@ -35,7 +35,8 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app
-    command: yarn dev
+    command: >
+      /bin/sh -c "yarn install && yarn dev"
     environment:
       - NEXT_PUBLIC_API_BASE_URL=http://localhost:5001
     depends_on:
