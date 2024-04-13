@@ -18,7 +18,6 @@ export default function Detection({ params }: Params) {
       setIsLoadingVideo(true)
       try {
         const response = await api.get(`/detections/${id}`)
-        console.log('response.data', response.data)
         setData(response.data)
         if (response.data.video && response.data.video.video_data) {
           const videoBlob = base64ToBlob(response.data.video.video_data)
