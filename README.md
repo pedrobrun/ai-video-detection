@@ -1,4 +1,5 @@
-#### Overview.ai
+This was a techinical assessment.
+It consists of an end-to-end platform for uploading videos and running AI predictions on each frame of the videos.
 
 ## Running the project
 Once you're inside the root folder you can start the containers through one command:
