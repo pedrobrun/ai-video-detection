@@ -18,7 +18,6 @@ To access the application, visit [http://localhost:3000](http://localhost:300).
 - Processing a frame takes a lot of time and it's a slow task to process a whole video, even if it's a small one. In a real world scenario if speed was a key factor there would have to be multiple instances of this MS to process batches of frames concurrently, which we're able to do without inconsistency issues since we keep track of the frame number and timestamp.
 - I believe it would be better for the video processing to be made in-memory, seems like it's the more scalable way to go, but I had some struggle to get frame by frame of the video in-memory in a smooth and fast way and went with the temporary file solution to not risk not meeting the deadline.
 - There might be an issue with the job that updates IDLE processings depending on a few cases, which I didn't have time to investigate further.
-- Overall python code can definitely improved, as well as organization as a whole (files, folders, segregation of files, etc..). I'm working mainly with Node for the last ~3 years with some ocasional python here and there, so you might find some stuff non-idiomatic/non-optimal here.
 
 A more ideal architecture would be (roughly):
 
@@ -26,5 +25,3 @@ A more ideal architecture would be (roughly):
 
 <br/>
 <br/>
-
-This was a very interesting test, probably the most interesting and uncommon take-home assessment I've ever went through. The challenges were fun and the outcome was awesome to see, in comparison to the usual basic CRUD stuff you get.
